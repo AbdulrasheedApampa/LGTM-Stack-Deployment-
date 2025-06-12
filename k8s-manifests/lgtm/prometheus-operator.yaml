@@ -1,0 +1,34 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kube-prometheus-stack
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://prometheus-community.github.io/helm-charts
+    chart: kube-prometheus-stack
+    targetRevision: 55.5.0
+    helm:
+      values: |
+        prometheus:
+          prometheusSpec:
+            remoteWrite:
+              - url: http://mimir-gateway/api/v1/push
+                queueConfig:
+                  maxSamplesPerSend: 1000
+                  maxShards: 200
+                  capacity: 2500
+
+        grafana:
+          enabled: false  # We're using our own Grafana
+
+        alertmanager:
+          enabled: false  # Using Mimir's alertmanager
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
