@@ -18,7 +18,7 @@ spec:
             url: http://gitops.one.codcn.com
         configs:
           params:
-            server.insecure: false
+            server.insecure: true
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd
