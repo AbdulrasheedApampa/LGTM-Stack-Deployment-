@@ -8,7 +8,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/YOUR_USERNAME/lgtm-gke-deployment.git
+    repoURL: https://github.com/AbdulrasheedApampa/Interview-Task-ACRPS.git
     targetRevision: main
     path: k8s-manifests
   destination:
