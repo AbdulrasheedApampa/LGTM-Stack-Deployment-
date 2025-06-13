@@ -1,8 +1,0 @@
-
-#agrocd login details
-username: admin
-password:1234567890
-
-#grafana login details
-username: admin
-password:1234567890
