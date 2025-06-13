@@ -40,3 +40,6 @@ This project is a take-home DevOps assessment that demonstrates the deployment o
  *Thank You*
 ---
 
+### 📊 Architecture Diagram
+
+![LGTM Stack Architecture](ltgm-Page-1.png)
