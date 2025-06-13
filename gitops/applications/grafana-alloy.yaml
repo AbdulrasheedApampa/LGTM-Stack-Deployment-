@@ -27,40 +27,16 @@ spec:
                 role = "pod"
               }
 
-              // Relabel rules for nodes
-              prometheus.relabel "nodes" {
-                forward_to = [prometheus.scrape.nodes.receiver]
-
-                rule {
-                  source_labels = ["__meta_kubernetes_node_label_(.+)"]
-                  target_label  = "${1}"
-                  action        = "labelmap"
-                  regex         = "__meta_kubernetes_node_label_(.+)"
-                }
-              }
-
-              // Relabel rules for pods  
-              prometheus.relabel "pods" {
-                forward_to = [prometheus.scrape.pods.receiver]
-
-                rule {
-                  source_labels = ["__meta_kubernetes_pod_label_(.+)"]
-                  target_label  = "${1}"
-                  action        = "labelmap"
-                  regex         = "__meta_kubernetes_pod_label_(.+)"
-                }
-              }
-
               // Scrape nodes
               prometheus.scrape "nodes" {
                 targets    = discovery.kubernetes.nodes.targets
-                forward_to = [prometheus.relabel.nodes.receiver]
+                forward_to = [prometheus.remote_write.mimir.receiver]
               }
 
               // Scrape pods
               prometheus.scrape "pods" {
                 targets    = discovery.kubernetes.pods.targets
-                forward_to = [prometheus.relabel.pods.receiver]
+                forward_to = [prometheus.remote_write.mimir.receiver]
               }
 
               // Remote write to Mimir
