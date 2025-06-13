@@ -114,3 +114,38 @@ resource "google_container_node_pool" "general" {
     }
   }
 }
+
+# Create Loki Service Account
+resource "google_service_account" "loki_sa" {
+  account_id   = "loki-sa"
+  display_name = "Loki Service Account"
+  project      = var.project_id
+}
+
+# Grant Storage Admin role
+resource "google_project_iam_member" "loki_sa_roles" {
+  project = var.project_id
+  role    = "roles/storage.objectAdmin"
+  member  = "serviceAccount:${google_service_account.loki_sa.email}"
+}
+
+# Create Mimir Service Account
+resource "google_service_account" "mimir_sa" {
+  account_id   = "mimir-sa"
+  display_name = "Mimir Service Account"
+  project      = var.project_id
+}
+
+# Grant Storage Admin role to Mimir SA
+resource "google_project_iam_member" "mimir_sa_roles" {
+  project = var.project_id
+  role    = "roles/storage.objectAdmin"
+  member  = "serviceAccount:${google_service_account.mimir_sa.email}"
+}
+
+# Allow GKE workload identity
+resource "google_service_account_iam_member" "loki_workload_identity" {
+  service_account_id = google_service_account.loki_sa.name
+  role               = "roles/iam.workloadIdentityUser"
+  member             = "serviceAccount:${var.project_id}.svc.id.goog[monitoring/loki-stack]"
+}

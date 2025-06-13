@@ -1,0 +1,105 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: lgtm-stack
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://grafana.github.io/helm-charts
+    targetRevision: 2.1.0
+    chart: lgtm-distributed
+    helm:
+      values: |
+        lgtm:
+          runtime:
+            logLevel: info
+
+          components:
+            enabled:
+              - mimir
+              - tempo
+              - loki
+              - grafana
+
+          mimir:
+            structuredConfig:
+              common:
+                storage:
+                  backend: gcs
+                  gcs:
+                    bucket_name: dru-interview-one-mimir-storage
+              ingester:
+                lifecycler:
+                  ring:
+                    kvstore:
+                      store: memberlist
+              blocks_storage:
+                backend: gcs
+                gcs:
+                  bucket_name: dru-interview-one-mimir-storage
+
+            serviceAccount:
+              create: true
+              name: mimir-sa
+              annotations:
+                iam.gke.io/gcp-service-account: mimir-sa@dru-interview-one.iam.gserviceaccount.com
+
+          loki:
+            structuredConfig:
+              common:
+                storage:
+                  backend: gcs
+                  gcs:
+                    bucket_name: dru-interview-one-loki-storage
+            serviceAccount:
+              create: true
+              name: loki-sa
+              annotations:
+                iam.gke.io/gcp-service-account: loki-sa@dru-interview-one.iam.gserviceaccount.com
+
+          tempo:
+            structuredConfig:
+              storage:
+                trace:
+                  backend: local
+                  local:
+                    path: /var/tempo
+            persistence:
+              enabled: true
+              size: 10Gi
+
+          grafana:
+            enabled: true
+            datasources:
+              datasources.yaml:
+                apiVersion: 1
+                datasources:
+                  - name: Loki
+                    type: loki
+                    url: http://loki:3100
+                    access: proxy
+                    isDefault: true
+                  - name: Tempo
+                    type: tempo
+                    url: http://tempo:3100
+                    access: proxy
+                  - name: Mimir
+                    type: prometheus
+                    url: http://mimir:8080/prometheus
+                    access: proxy
+            sidecar:
+              dashboards:
+                enabled: true
+              datasources:
+                enabled: true
+            adminPassword: "admin"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
