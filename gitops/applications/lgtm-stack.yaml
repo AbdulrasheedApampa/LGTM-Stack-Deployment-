@@ -29,7 +29,10 @@ spec:
                   backend: gcs
                   gcs:
                     bucket_name: dru-interview-one-mimir-storage
+              limits:                          
+                out_of_order_time_window: 1h
               ingester:
+                out_of_order_time_window: 1h 
                 lifecycler:
                   ring:
                     kvstore:
