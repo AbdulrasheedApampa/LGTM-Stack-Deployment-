@@ -6,21 +6,21 @@
 resource "google_container_cluster" "gke_cluster" {
   name                     = "gke-cluster"
   location                 = var.region
-  remove_default_node_pool = true                  # Remove the default node pool to create custom ones
-  initial_node_count       = 1                     # Required, though unused due to custom pool
+  remove_default_node_pool = true # Remove the default node pool to create custom ones
+  initial_node_count       = 1    # Required, though unused due to custom pool
   network                  = google_compute_network.main_vpc.self_link
   subnetwork               = google_compute_subnetwork.private_subnet.self_link
-  networking_mode          = "VPC_NATIVE"          # Enable VPC-native IP aliasing
+  networking_mode          = "VPC_NATIVE" # Enable VPC-native IP aliasing
   project                  = var.project_id
   deletion_protection      = false
 
   # Enable or disable specific GKE add-ons
   addons_config {
     http_load_balancing {
-      disabled = true                              # Disable default HTTP LB (we'll use our own)
+      disabled = true # Disable default HTTP LB (we'll use our own)
     }
     horizontal_pod_autoscaling {
-      disabled = false                             # Enable HPA
+      disabled = false # Enable HPA
     }
   }
 
@@ -42,9 +42,9 @@ resource "google_container_cluster" "gke_cluster" {
 
   # Enable private nodes for security and specify master CIDR
   private_cluster_config {
-    enable_private_nodes    = true                 # Nodes have internal IPs only
-    enable_private_endpoint = false                # Allow access to control plane via public endpoint
-    master_ipv4_cidr_block  = "192.168.0.0/28"     # Reserved block for control plane
+    enable_private_nodes    = true             # Nodes have internal IPs only
+    enable_private_endpoint = false            # Allow access to control plane via public endpoint
+    master_ipv4_cidr_block  = "192.168.0.0/28" # Reserved block for control plane
   }
 
   # Allow control plane access only from specific CIDR blocks
@@ -82,11 +82,11 @@ resource "google_service_account" "gke_node_sa" {
 # Assign necessary IAM roles to GKE node SA
 resource "google_project_iam_member" "gke_sa_roles" {
   for_each = toset([
-    "roles/logging.logWriter",          # Needed for Cloud Logging
-    "roles/monitoring.metricWriter",    # Required for metrics export
-    "roles/monitoring.viewer",          # Allows monitoring data access
-    "roles/storage.objectViewer",       # Needed to read from GCS (e.g., for configs)
-    "roles/storage.objectCreator"       # Needed to push logs/objects
+    "roles/logging.logWriter",       # Needed for Cloud Logging
+    "roles/monitoring.metricWriter", # Required for metrics export
+    "roles/monitoring.viewer",       # Allows monitoring data access
+    "roles/storage.objectViewer",    # Needed to read from GCS (e.g., for configs)
+    "roles/storage.objectCreator"    # Needed to push logs/objects
   ])
   project = var.project_id
   role    = each.key
@@ -108,12 +108,12 @@ resource "google_container_node_pool" "general" {
   ]
 
   management {
-    auto_repair  = true               # Enable auto-repair
-    auto_upgrade = true              # Enable auto-upgrade
+    auto_repair  = true # Enable auto-repair
+    auto_upgrade = true # Enable auto-upgrade
   }
 
   node_config {
-    machine_type    = "e2-standard-4"  # VM type for nodes
+    machine_type    = "e2-standard-4" # VM type for nodes
     service_account = google_service_account.gke_node_sa.email
     oauth_scopes = [
       "https://www.googleapis.com/auth/cloud-platform",
@@ -122,7 +122,7 @@ resource "google_container_node_pool" "general" {
       "https://www.googleapis.com/auth/trace.append"
     ]
     labels = {
-      env = "test"                    # Node labeling
+      env = "test" # Node labeling
     }
     metadata = {
       disable-legacy-endpoints = "true"

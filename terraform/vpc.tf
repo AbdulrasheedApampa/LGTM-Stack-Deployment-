@@ -6,7 +6,7 @@
 resource "google_compute_network" "main_vpc" {
   name                    = "main-vpc"
   routing_mode            = "REGIONAL"
-  auto_create_subnetworks = false  # We define subnets manually
+  auto_create_subnetworks = false # We define subnets manually
 
   depends_on = [
     google_project_service.compute_api,
@@ -34,7 +34,7 @@ resource "google_compute_subnetwork" "public_subnet" {
   ip_cidr_range            = "10.10.0.0/19"
   region                   = var.region
   network                  = google_compute_network.main_vpc.id
-  private_ip_google_access = true  # Allow instances without external IPs to access Google APIs
+  private_ip_google_access = true # Allow instances without external IPs to access Google APIs
   stack_type               = "IPV4_ONLY"
 
   depends_on = [
@@ -104,12 +104,12 @@ resource "google_compute_router_nat" "nat_gateway" {
 
   # Apply NAT to both public and private subnets 
   subnetwork {
-    name                     = google_compute_subnetwork.public_subnet.name
+    name                    = google_compute_subnetwork.public_subnet.name
     source_ip_ranges_to_nat = ["ALL_IP_RANGES"]
   }
 
   subnetwork {
-    name                     = google_compute_subnetwork.private_subnet.name
+    name                    = google_compute_subnetwork.private_subnet.name
     source_ip_ranges_to_nat = ["ALL_IP_RANGES"]
   }
 }

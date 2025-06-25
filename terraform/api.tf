@@ -4,7 +4,7 @@
 resource "google_project_service" "container_api" {
   project            = var.project_id
   service            = "container.googleapis.com"
-  disable_on_destroy = false 
+  disable_on_destroy = false
 }
 
 # Enables the Cloud Logging API to allow GKE and other services to send logs to Cloud Logging

@@ -1,0 +1,68 @@
+connect your device to gcp project
+ - brew install --cask google-cloud-sdk  #mac os
+ - sudo apt-get install google-cloud-sdk #Debian/Ubuntu
+ - official installation guide https://cloud.google.com/sdk/docs/install#linux
+
+configurature gcp infra to set up Gke and it dependencies using terraform
+ - api
+ - backend
+ - dns
+ - firewalls
+ - Gke
+ - provider
+ - vpc
+ - variables
+ command
+ - terraform init,fmt,validate,plan,apply,destroy
+ 
+install and login to agrocd
+ - https://argo-cd.readthedocs.io/en/stable/getting_started/
+ - install argocd cli
+
+connect agrocd with your github account
+- argocd login <ARGOCD_SERVER> --username admin --password <ARGOCD_PASSWORD> --insecure
+- argocd repo add https://github.com/<your-username>/<your-repo>.git \
+  --username <your-github-username> \
+  --password <your-github-token>
+- argocd repo list
+
+wait for it to sync or deploy the application to agrocd with kubectl apply -f file-name.yaml
+wait for application to fully deploy
+confirm url of the application
+
+
+- kubectl get secret lgtm-stack-grafana -n monitoring -o jsonpath="{.data.admin-password}" | base64 -d
+echo
+
+- kubectl apply -f /Users/apple/Desktop/Interview-Task-ACRPS/gitops/applications/ 
+- kubectl logs -f grafana-alloy-4fns5 -n monitoring 
+- kubectl get pods -n monitoring | grep mimir 
+- kubectl get application lgtm-stack -n argocd -0 yaml
+- kubectl rollout restart deployment/lgtm-stack-mimir-distributor -n monitoring 
+- kubectl get pods -n monitoring
+- # Check if multiple Alloy instances are scraping the same endpoints
+kubectl logs -n monitoring grafana-alloy-4fns5 | grep "prometheus.scrape"
+kubectl logs -n monitoring grafana-alloy-5tzn8 | grep "prometheus.scrape"
+kubectl get all -n monitoring
+- kubectl get secret lgtm-stack-grafana -n monitoring -o jsonpath="{.data.admin-user}" | base64 -d && echo
+- kubectl get secrets -n monitoring 
+- kubectl logs -n monitoring -l app.kubernetes.io/name=promtail
+- kubectl apply -f /Users/apple/Desktop/Interview-Task-ACRPS/gitops/applications/loki-stack.yaml
+- kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo  
+- kubectl get all -n argocd 
+- kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer"}}'  
+- gcloud container clusters get-credentials gke-cluster --region us-central1 --project dru-interview-one  
+- kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+- kubectl get svc -n argocd 
+- gcloud services enable \
+  compute.googleapis.com \
+  container.googleapis.com \
+  storage.googleapis.com \
+  iam.googleapis.com \
+  serviceusage.googleapis.com \
+  cloudresourcemanager.googleapis.com \
+  dns.googleapis.com \
+  secretmanager.googleapis.com \
+  artifactregistry.googleapis.com \
+  monitoring.googleapis.com \
+  logging.googleapis.com

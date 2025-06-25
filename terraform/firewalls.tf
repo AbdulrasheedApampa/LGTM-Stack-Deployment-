@@ -1,8 +1,8 @@
 # Firewall rule to allow internal communication within the VPC and SSH access via Google IAP
 
 resource "google_compute_firewall" "allow_internal" {
-  name    = "main-vpc-allow-internal"            
-  network = google_compute_network.main_vpc.id   
+  name    = "main-vpc-allow-internal"
+  network = google_compute_network.main_vpc.id
 
   # Allow all TCP traffic within the VPC (e.g., service-to-service communication)
   allow {
