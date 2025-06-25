@@ -1,6 +1,6 @@
 # LGTM Stack Deployment on GKE with Terraform and ArgoCD
 
-This project is a take-home DevOps assessment that demonstrates the deployment of the **LGTM stack** (Loki, Grafana, Tempo, Mimir) on a **GKE Standard Cluster** using **Terraform for Infrastructure as Code** and **ArgoCD for GitOps**.
+This project demonstrates the deployment of the **LGTM stack** (Loki, Grafana, Tempo, Mimir) on a **GKE Standard Cluster** using **Terraform for Infrastructure as Code** and **ArgoCD for GitOps**.
 
 ---
 
@@ -8,8 +8,8 @@ This project is a take-home DevOps assessment that demonstrates the deployment o
 
 | Service      | URL                                     | Username | Password     |
 |--------------|------------------------------------------|----------|--------------|
-| ArgoCD UI    | [gitops.one.codcn.com](https://gitops.one.codcn.com/) | `admin`  | `1234567890` |
-| Grafana UI   | [grafana.one.codcn.com](https://grafana.one.codcn.com/) | `admin`  | `1234567890` |
+| ArgoCD UI    | [gitops.one.codcn.com](https://gitops.one.codcn.com/) | `admin`  | `password`   ` |
+| Grafana UI   | [grafana.one.codcn.com](https://grafana.one.codcn.com/) | `admin`  | `password` |
 
 ---
 
